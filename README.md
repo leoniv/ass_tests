@@ -78,7 +78,7 @@ class SmalTest < AssTest::MiniTest::Test
   # and we ask kepp alive connection while tests executed
   # Default :kepp_alive => true.
   # If set :kepp_alive => false for :thick or :thin conexts
-  # wakeup connection well be very slouly for big applications
+  # wakeup connection will be very slouly for big applications
   context :thick, :kepp_alive => true
   # If we whant loggining in infobase as some user we say:
   #   loggining :as => 'user', :whith => 'password'
