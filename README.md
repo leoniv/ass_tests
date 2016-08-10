@@ -19,6 +19,7 @@ It make possible to write tests for 1C:Enterprise on Ruby easy.
 - Works only in Windows or Cygwin.
 - Not available methods ```eval``` and ```execute``` of 1C "Global context"
 - Unpossible attach to 1C debugger.
+- Now support ```Minitest::Test``` only
 - Other unknown now :(
 
 ## Features
@@ -54,7 +55,68 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+
+### Smal exampe for ```Minitest```
+
+- ```test_helper.rb```:
+```ruby
+require 'minitest/autorun'
+require 'ass_tests/mini_test'
+require 'ass_tests/info_bases'
+
+# Describe empty InfoBase
+AssTests::InfoBases.describe do
+  file :empty_ib
+end
+```
+- ```small_test.rb```:
+```ruby
+class SmalTest < AssTest::MiniTest::Test
+  # Demands described :empty_ib infobase
+  use :empty_ib
+  # Declare to run :empty_ib in :context of :thick application
+  # and we ask kepp alive connection while tests executed
+  # Default :kepp_alive => true.
+  # If set :kepp_alive => false for :thick or :thin conexts
+  # wakeup connection well be very slouly for big applications
+  context :thick, :kepp_alive => true
+  # If we whant loggining in infobase as some user we say:
+  #   loggining :as => 'user', :whith => 'password'
+  # In this example we use empty infobase witout any users
+
+  # If we say :kepp_alive => true and in tests we whant to manipulate
+  # whith data, each test mast be wraped in 1C transaction
+  # for tests isolation.
+  # In this example we arn't manipulate whith data
+  # Wharning! 1C transaction not define for :thin contex,
+  # for :thin contex require patch infobase application
+  def setup
+    ole.BeginTransaction
+  end
+
+  # Transaction mast be rollback for tests isolation
+  def teardown
+    ole.RollbackTransaction
+  end
+
+  puts infobase.name    # => "empty_ib"
+  puts infobase.exists? # => "true"
+  puts ole.__opened__?  # => "false"
+  puts ole.class # => "AssLauncher::Enterprise::Ole::ThickApplication"
+
+  def test_hello_world
+    puts ole.__opened__?  # => "true"
+    a = ole.newObject 'array'
+    a.add 'Hello world'
+    assert_equal 'Hello world', ole.string(a.get(0))
+  end
+
+  def test_other
+    assert ole.__opened__?
+  end
+
+end
+```
 
 ## Development
 
