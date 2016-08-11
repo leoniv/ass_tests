@@ -56,7 +56,7 @@ Or install it yourself as:
 ## Usage
 
 
-### Smal exampe for ```Minitest```
+### Smal example for ```Minitest```
 
 - ```test_helper.rb```:
 ```ruby
@@ -71,25 +71,26 @@ end
 ```
 - ```small_test.rb```:
 ```ruby
-class SmalTest < AssTest::MiniTest::Test
-  # Demands described :empty_ib infobase
+
+class SmalTest < AssTests::MiniTest::Test
+  # Demands described :empty_ib information base
   use :empty_ib
   # Declare to run :empty_ib in :context of :thick application
-  # and we ask kepp alive connection while tests executed
-  # Default :kepp_alive => true.
-  # If set :kepp_alive => false for :thick or :thin conexts
-  # wakeup connection will be very slouly for big applications
-  context :thick, :kepp_alive => true
-  # If we whant loggining in infobase as some user we say:
-  #   loggining :as => 'user', :whith => 'password'
-  # In this example we use empty infobase witout any users
+  # and we ask keep alive connection while tests executing
+  # Default :keep_alive => true.
+  # If set :keep_alive => false for :thick or :thin context
+  # wakeup connection will be very slowly for big applications
+  context :thick, :keep_alive => true
+  # If we want login in information base as some user we say:
+  #   login :as => 'user', :with => 'password'
+  # In this example we use empty information base without any users
 
-  # If we say :kepp_alive => true and in tests we whant to manipulate
-  # whith data, each test mast be wraped in 1C transaction
+  # If we say :keep_alive => true and in tests we want to manipulate
+  # with data, each test mast be wrapped in 1C transaction
   # for tests isolation.
-  # In this example we arn't manipulate whith data
-  # Wharning! 1C transaction not define for :thin contex,
-  # for :thin contex require patch infobase application
+  # In this example we aren't manipulate with data
+  # Warning! 1C transaction not define for :thin context,
+  # for :thin context require patch information base application
   def setup
     ole.BeginTransaction
   end
@@ -114,7 +115,6 @@ class SmalTest < AssTest::MiniTest::Test
   def test_other
     assert ole.__opened__?
   end
-
 end
 ```
 
