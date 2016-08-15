@@ -1,5 +1,6 @@
 require "ass_tests/version"
 
 module AssTests
-  # Your code goes here...
+  class ConfigureError < StandardError; end
+  require 'ass_tests/config'
 end
