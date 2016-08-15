@@ -60,8 +60,7 @@ Or install it yourself as:
 
 - ```test_helper.rb```:
 ```ruby
-require 'minitest/autorun'
-require 'ass_tests/mini_test'
+require 'ass_tests/autorun'
 require 'ass_tests/info_bases'
 
 # Describe empty InfoBase
@@ -114,6 +113,17 @@ class SmalTest < AssTests::MiniTest::Test
 
   def test_other
     assert ole.__opened__?
+  end
+end
+```
+- also you can write native ```Minitest::Test``` for testing
+  other things like this ```ordinary_test.rb```:
+```ruby
+# Also you can write native Minitest::Test
+
+class OrdinaryTest < Minitest::Test
+  def test_fail
+    assert false
   end
 end
 ```
