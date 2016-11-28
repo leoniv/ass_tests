@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "ass_launcher"
-  spec.add_dependency "ass_maintainer/info_base"
+  spec.add_dependency "ass_maintainer-info_base"
   spec.add_dependency "minitest", "> 5"
   spec.add_dependency "minitest-hooks"
 

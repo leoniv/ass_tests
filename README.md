@@ -24,18 +24,15 @@ It make possible to write tests for 1C:Enterprise on Ruby easy.
 
 ## Features
 
-- Provides DSL for describe 1C:Enterprise application (aka "Information base")
 - Support to describe many different 1C Information bases.
-- Support describe exists Information bases as ```external```. Such Information bases is persistent and can't be build or remove.
-- Support to make ```File``` and ```Server``` type of Information bases.
-- Support to remove ```File``` and ```Server``` type of Information bases.
 - Automatically build described Information base on demand.
 - Automatically rebuild Information base on demand.
-- Class ```InfoBase``` provides methods like  ```make```, ```rm!``` and other for easy manipulate with Information base.
-- Passes required instance of class ```InfoBase``` into tests for connect to Information base for testing.
+- Passes required instance of class `InfoBase` into tests for connect to Information base for testing.
 - Hold pool of opened connection with 1C information bases for decrease costs on wakeup 1C application.
 - Automatically close all opened connection after all tests executed.
-
+- Provides assertions for tests 1C values in Ruby side
+- Provides features for testing of 1C externals like as ExternalDataProcessor and ExternalReport
+- Provides features for fill data in infobases under test.
 
 ## Installation
 
