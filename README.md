@@ -24,7 +24,9 @@ It make possible to write tests for 1C:Enterprise on Ruby easy.
 
 ## Features
 
+- Provides DSL for describe 1C:Enterprise application (aka "Information base")
 - Support to describe many different 1C Information bases.
+- Support describe exists Information bases as ```external```. Such Information bases is persistent and can't be build or remove.
 - Automatically build described Information base on demand.
 - Automatically rebuild Information base on demand.
 - Passes required instance of class `InfoBase` into tests for connect to Information base for testing.
