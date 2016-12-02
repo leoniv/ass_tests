@@ -1,7 +1,7 @@
 module AssTests
   module InfoBases
+    require 'ass_tests/info_bases/info_base'
     module DSL
-      require 'ass_maintainer/info_base'
       module Describer
         class AbstractDescriber
           def ib(&block)
@@ -98,7 +98,7 @@ module AssTests
               end
 
               def parse_str(str)
-                parse Shellwords.shellwords(str)
+                parse Shellwords.shellwords(str.to_s)
               end
 
               def presult
@@ -108,7 +108,7 @@ module AssTests
             end
 
             class ServerConnection
-              include AssMaintainer::InfoBase::ServerIb::ServerConnection
+              include AssMaintainer::InfoBase::ServerIb::EnterpriseServers::ServerConnection
               extend Parser
               def self.options
                 opts.on('-H', '--host HOST:PORT') do |v|
@@ -135,7 +135,7 @@ module AssTests
               end
 
               def to_server_agent
-                AssMaintainer::InfoBase::ServerIb::ServerAgent.new(host_port,
+                AssMaintainer::InfoBase::ServerIb::EnterpriseServers::ServerAgent.new(host_port,
                                                                   user,
                                                                   password)
               end
@@ -230,7 +230,7 @@ module AssTests
           include DescribeOptions
 
           def agent(str)
-            @agent = Helpers::AgentConnection.parse_str(str)
+            @agent = Helpers::AgentConnection.parse_str(str) unless str.to_s.empty?
           end
 
           def claster(str)
@@ -249,7 +249,7 @@ module AssTests
 
           def ib(&block)
             ib = super
-            ib.server_agent = @agent || def_agent
+            # FIXME: ib.server_agent = @agent || def_agent
             ib
           end
 
@@ -278,7 +278,7 @@ module AssTests
             @claster ||= Helpers::ClasterConnection\
               .parse_str(AssTests.config.test_infobase_claster)
           end
-          private :_claster
+          private :def_claster
 
           def init_connections
             def_db.fill_cs(cs)
@@ -293,24 +293,25 @@ module AssTests
       end
 
       def self.server(ib_name, &block)
-        Describer::ServerIb.new(ib_name).desc.ib(&block)
+        Describer::ServerIb.new(ib_name).ib(&block)
       end
 
       def self.external(ib_name, connection_string, &block)
-        Describer::ExternalIb.new(ib_name, connection_string).desc.ib(&block)
+        Describer::ExternalIb.new(ib_name, connection_string).ib(&block)
       end
     end
 
     def pull
       @pull ||= {}
     end
-    private_class_method :pull
+    private :pull
 
     def [](name)
       fail ArgumentError, "InfoBase `#{name}' not discribed" unless\
         pull.key? name
       ib = pull[name]
-      ib.make
+      ib.make unless ib.read_only?
+      fail 'FIXME' if ib.read_only? && !ib.exists?
       ib
     end
 
@@ -333,7 +334,7 @@ module AssTests
     end
 
     def external(ib_name, connection_string, &block)
-      add(DSL.server(ib_name, connection_string, &block)
+      add(DSL.external(ib_name, connection_string, &block))
     end
     extend self
   end

@@ -1,3 +1,4 @@
+require 'test_helper'
 require 'ass_tests/info_bases'
 
 AssTests::InfoBases.describe do
@@ -41,12 +42,39 @@ AssTests::InfoBases.describe do
   # ServerIb
     agent ENV['ASS_SERVER_AGENT'] # --host 'host:port' --user 'admin' --password 'password'
     claster ENV['ASS_CLASTER'] # --host 'host:port' --user 'admin' --password 'password'
-    # db ['EMPTY_DATA_BASE'] # --host 'host:port' --dbms 'MSSQLServer' --db-name 'db_name' --user 'admin' --password 'password' --create-db
-    db "--host 'host:port' --dbms 'MSSQLServer' --db-name 'db_name' --user 'admin' --password 'password' --create-db"
+    db ENV['EMPTY_DATA_BASE'] # --host 'host:port' --dbms 'MSSQLServer' --db-name 'db_name' --user 'admin' --password 'password' --create-db
+    #db "--host 'host:port' --dbms 'MSSQLServer' --db-name 'db_name' --user 'admin' --password 'password' --create-db"
     schjobdn # Запрет заданий см строка соединения
   end
 
-  external :acc30, ENV['ACC30_IB_CONNECTION_STRING'] do
+  external :acc30, 'File="path_to_infobase"' do
     platform_require '>= 8.3'
+  end
+end
+
+module ExampleTest
+  describe 'smoky test' do
+    it 'empty_ib exists' do
+      AssTests::InfoBases[:empty_ib].must_be_instance_of\
+        AssTests::InfoBases::InfoBase
+      AssTests::InfoBases[:empty_ib].is?(:file).must_equal true
+      AssTests::InfoBases[:empty_ib].read_only?.must_equal false
+    end
+
+    it 'empty_server_ib exists' do
+      proc {
+        AssTests::InfoBases[:empty_server_ib].must_be_instance_of\
+          AssTests::InfoBases::InfoBase
+        AssTests::InfoBases[:empty_server_ib].is?(:server).must_equal true
+        AssTests::InfoBases[:empty_server_ib].read_only?.must_equal false
+      }.must_raise NotImplementedError
+    end
+
+    it 'acc30 exists' do
+      AssTests::InfoBases[:acc30].must_be_instance_of\
+        AssTests::InfoBases::InfoBase
+      AssTests::InfoBases[:acc30].is?(:file).must_equal true
+      AssTests::InfoBases[:acc30].read_only?.must_equal false
+    end
   end
 end
