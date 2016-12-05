@@ -5,6 +5,7 @@ module AssTests
   require 'ass_tests/assertions'
   require 'ass_tests/fixt'
   require 'ass_tests/externals'
+  require 'ass_tests/info_bases'
 end
 
 class WIN32OLERuntimeError
