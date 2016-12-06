@@ -1,5 +1,6 @@
 module AssTests
   class ConfigureError < StandardError; end
+  require 'minitest'
   require 'ass_tests/version'
   require 'ass_tests/config'
   require 'ass_tests/assertions'

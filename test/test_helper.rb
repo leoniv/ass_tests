@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'ass_tests'
+require 'simplecov'
 
+require 'ass_tests'
 require 'minitest/autorun'
 require 'mocha/mini_test'
 
