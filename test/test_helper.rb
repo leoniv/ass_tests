@@ -25,6 +25,9 @@ module AssTestsTest
 
     HELLO_EPF = File.join PATH, 'hello.epf'
     fail unless File.file? HELLO_EPF
+
+    CATALOG_CF = File.join PATH, 'catalog.cf'
+    fail unless File.file? CATALOG_CF
   end
 
   module Tmp

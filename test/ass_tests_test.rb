@@ -105,5 +105,74 @@ module AssTestsTest
       inst.expects(:fixtures_loaded?).returns(true)
       inst.built?.must_equal true
     end
+
+    it '#erase_data!' do
+      fixtures = Module.new do
+        def self.execute(ib)
+          ext = ib.ole :external
+          begin
+            ext.__open__ ib.connection_string
+            item = ext.Catalogs.Catalog.CreateItem
+            item.Description = 'new item'
+            item.write
+          ensure
+            ext.__close__
+          end
+        end
+      end
+
+      def item_empty_ref?(ib)
+        ext = ib.ole(:external)
+        ext.__open__ ib.connection_string
+        item = ext.Catalogs.Catalog.FindByDescription 'new item'
+        item.IsEmpty
+      ensure
+        ext.__close__
+      end
+
+      inst(template: Fixtures::CATALOG_CF,
+           fixtures: fixtures).make
+
+      item_empty_ref?(inst).must_equal false
+
+      inst.erase_data!.must_equal true
+
+      item_empty_ref?(inst).must_equal true
+    end
+
+    it '#erase_data! fail if infobase read_only?' do
+      e = proc {
+        inst.expects(:read_only?).returns true
+        inst.erase_data!
+      }.must_raise AssMaintainer::InfoBase::MethodDenied
+      e.message.must_match %r{erase_data!}
+    end
+
+    it '#load_template! fail if infobase read_only?' do
+      e = proc {
+        inst.expects(:read_only?).returns true
+        inst.load_template!
+      }.must_raise AssMaintainer::InfoBase::MethodDenied
+      e.message.must_match %r{load_template!}
+    end
+
+    it '#load_fixtures! fail if infobase read_only?' do
+      e = proc {
+        inst.expects(:read_only?).returns true
+        inst.load_fixtures!
+      }.must_raise AssMaintainer::InfoBase::MethodDenied
+      e.message.must_match %r{load_fixtures!}
+    end
+
+    it '#reload_fixtures! moked' do
+      seq = sequence('reload_fixtures!')
+      inst.expects(:erase_data!).in_sequence(seq)
+      inst.expects(:load_fixtures!).in_sequence(seq)
+      inst.reload_fixtures!
+    end
+
+    it '#reload_fixtures! smoky' do
+      inst.make.reload_fixtures!
+    end
   end
 end
