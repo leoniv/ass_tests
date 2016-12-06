@@ -47,7 +47,7 @@ AssTests::InfoBases.describe do
     schjobdn # Запрет заданий см строка соединения
   end
 
-  external :acc30, 'File="path_to_infobase"' do
+  external :acc30, AssTestsTest::Tmp::EXTERNAL_IB_CS do
     platform_require '>= 8.3'
   end
 end
@@ -74,7 +74,8 @@ module ExampleTest
       AssTests::InfoBases[:acc30].must_be_instance_of\
         AssTests::InfoBases::InfoBase
       AssTests::InfoBases[:acc30].is?(:file).must_equal true
-      AssTests::InfoBases[:acc30].read_only?.must_equal false
+      AssTests::InfoBases[:acc30].read_only?.must_equal true
+      AssTests::InfoBases[:acc30].platform_require.must_equal '>= 8.3'
     end
   end
 end

@@ -36,7 +36,7 @@ module AssTests
           def initialize(ib_name, connection_string)
             @ib_name = ib_name
             @connection_string = AssLauncher::Support::ConnectionString\
-              .new(connection_string)
+              .new(connection_string.to_s)
           end
         end
 
@@ -311,7 +311,7 @@ module AssTests
         pull.key? name
       ib = pull[name]
       ib.make unless ib.read_only?
-      fail 'FIXME' if ib.read_only? && !ib.exists?
+      fail 'External infobse must be exists' if ib.read_only? && !ib.exists?
       ib
     end
 
