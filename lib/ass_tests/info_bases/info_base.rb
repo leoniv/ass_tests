@@ -2,6 +2,7 @@ module AssTests
   module InfoBases
     require 'ass_maintainer/info_base'
     class InfoBase < AssMaintainer::InfoBase
+      # see {#initialize}
       OPTIONS = {
         template: nil,
         fixtures: nil,
@@ -17,6 +18,16 @@ module AssTests
         AssMaintainer::InfoBase::OPTIONS.merge OPTIONS
       end
 
+      # @param name [String]
+      # @param connection_string [String AssLauncher::Support::ConnectionString]
+      # @param read_only [false true] flag for read_only infobase
+      # @option options [String #src_root] :template path to template like a
+      #  +.cf+, +.dt+ file or dir of XML files. If respond to +#src_root+ then
+      #  +#src_root+ must returns path to dir of XML files
+      # @option options [#call] :fixtures object for fill InfoBase data.
+      #  Must hase method #call accepts {InfoBase} argumet
+      # @note +options+ may includes other options defined for
+      #  +AssMaintainer::InfoBase+
       def initialize(name, connection_string, read_only = true, **options)
         super name, connection_string, read_only, **OPTIONS.merge(options)
       end
@@ -49,7 +60,7 @@ module AssTests
       def load_fixtures!
         fail AssMaintainer::InfoBase::MethodDenied, :load_fixtures! if\
           read_only?
-        fixtures.execute(self) if fixtures
+        fixtures.call(self) if fixtures
         @fixtures_loaded = true
       end
 
@@ -91,14 +102,14 @@ module AssTests
 
       # @api private
       def template_src?
-        template.respond_to?(:path) &&\
-          File.file?(File.join(src_path, 'Configuration.xml'))
+        File.file?(File.join(src_root, 'Configuration.xml')) if src_root
       end
 
-      def src_path
-        template.path.to_s
+      def src_root
+        return template if template.is_a? String
+        return template.src_root if template.respond_to?(:src_root)
       end
-      private :src_path
+      private :src_root
 
       # @api private
       def load_template
@@ -115,7 +126,7 @@ module AssTests
 
       # @api private
       def load_src
-        cfg.load_xml(src_path) && db_cfg.update
+        cfg.load_xml(src_root) && db_cfg.update
       end
 
       # @api private

@@ -32,7 +32,7 @@ module AssTestsTest
       fixtures = mock
       ib = inst(:template => Fixtures::CF_FILE, :fixtures => fixtures)
       ib.expects(:load_template).in_sequence(seq)
-      fixtures.expects(:execute).in_sequence(seq).with(ib)
+      fixtures.expects(:call).in_sequence(seq).with(ib)
       ib.make.must_equal ib
       ib.built?.must_equal true
     end
@@ -55,12 +55,22 @@ module AssTestsTest
     end
 
     it '#load_template :src smoky' do
-      inst(:template => File.new(Fixtures::XML_FILES))
+      src = mock
+      src.expects(:src_root).returns(Fixtures::XML_FILES).at_least_once
+      inst(:template => src)
         .make.load_template.must_equal :src
     end
 
-    it '#load_template :src mocked' do
-      ib = inst(:template => File.new(Fixtures::XML_FILES))
+    it '#load_template :src mocked with src object' do
+      src = mock
+      src.expects(:src_root).returns(Fixtures::XML_FILES).times(4)
+      ib = inst(:template => src)
+      ib.expects(:load_src)
+      ib.load_template
+    end
+
+    it '#load_template :src mocked with string' do
+      ib = inst(:template => Fixtures::XML_FILES)
       ib.expects(:load_src)
       ib.load_template
     end
@@ -85,7 +95,7 @@ module AssTestsTest
     end
 
     it '#template_type :src' do
-      inst(:template => File.new(Fixtures::XML_FILES)).template_type.must_equal :src
+      inst(:template => Fixtures::XML_FILES).template_type.must_equal :src
     end
 
     it '#built? if not template loded false' do
@@ -107,17 +117,15 @@ module AssTestsTest
     end
 
     it '#erase_data!' do
-      fixtures = Module.new do
-        def self.execute(ib)
-          ext = ib.ole :external
-          begin
-            ext.__open__ ib.connection_string
-            item = ext.Catalogs.Catalog.CreateItem
-            item.Description = 'new item'
-            item.write
-          ensure
-            ext.__close__
-          end
+      fixtures = ->(ib) do
+        ext = ib.ole :external
+        begin
+          ext.__open__ ib.connection_string
+          item = ext.Catalogs.Catalog.CreateItem
+          item.Description = 'new item'
+          item.write
+        ensure
+          ext.__close__
         end
       end
 
