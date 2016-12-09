@@ -44,7 +44,7 @@ module AssTestsTest
                                                    EXTERNAL_IB_CS, false)
     EXTERNAL_IB.make
 
-    def do_at_exit
+    def self.do_at_exit
       EXTERNAL_IB.rm! :yes if EXTERNAL_IB.exists?
     end
   end
