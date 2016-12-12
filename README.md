@@ -57,13 +57,13 @@ Or install it yourself as:
 - ```test_helper.rb```:
 ```ruby
 # Describe empty InfoBase
+
+require 'ass_tests'
 AssTests::InfoBases.describe do
   file :empty_ib
 end
 
-
 module ExampleTest
-
   # Describe runtimes
   module Runtimes
     module Ext
@@ -81,7 +81,7 @@ module ExampleTest
   AssTests::Assertions.init Runtimes::Ext
 end
 
-
+# After all was prepared loads autorun
 require 'ass_tests/minitest/autorun'
 ```
 - ```exmple_test.rb```:
@@ -96,8 +96,9 @@ module ExampleTest
     end
   end
 
-  class TestExample < AssTest::Minitest
+  class TestExample < Minitest::Test
     like_ole_runtime Runtimes::Ext
+    include AssTests::Assertions
 
     def test_runtime_metaData
       _assert_equal metaData, metaData
@@ -111,13 +112,15 @@ module ExampleTest
     end
   end
 
-  class TestInExternalRuntime
+  class TestInExternalRuntime < Minitest::Test
     like_ole_runtime Runtimes::Ext
+    include AssTests::Assertions
     include SharedTests
   end
 
-  class TestInThickAppRuntime
+  class TestInThickAppRuntime < Minitest::Test
     like_ole_runtime Runtimes::ThickApp
+    include AssTests::Assertions
     include SharedTests
   end
 end
