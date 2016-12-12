@@ -7,10 +7,11 @@ module AssTestsTest
       skip
     end
 
-    it '.ext_runtime fail' do
+    it '#to_comparable fail' do
+      skip
       e = proc {
-        AssTests::Assertions.ext_runtime
-      }.must_raise AssTests::Assertions::NotInitializedError
+        skip
+      }.must_raise AssTests::Assertions::InvalidOleConnectorError
       e.message.must_equal ''
     end
   end

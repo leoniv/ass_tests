@@ -20,6 +20,7 @@ It make possible to write tests for 1C:Enterprise on Ruby easy.
 - Not available methods ```eval``` and ```execute``` of 1C "Global context"
 - Unpossible attach to 1C debugger.
 - Now support ```Minitest``` only
+- `AssTests::Assertions` works for external or thick application ole connectors only
 - Other unknown now :(
 
 ## Features

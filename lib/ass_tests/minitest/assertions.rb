@@ -13,31 +13,18 @@ end
 
 module AssTests
   module Assertions
-    class NotInitializedError < StandardError
+    class InvalidOleConnectorError < StandardError
       def message
-        'External runtime does not initialized.'\
-        ' AssTests::Assertions.init(ext_runtime) must be called before'\
-        ' running any assertions'
+        'Assertions work for external or thick application ole connectors'
       end
     end
 
     UNKNOWN_XML_TYPE = 'UNKNOWN_XML_TYPE'
 
-    def self.init(ext_runtime)
-      fail ArgumentError, 'Expected external runtime' if\
-        ext_runtime.ole_type != :external
-      @ext_runtime = ext_runtime
-    end
-
-    # Returns external runtime
-    def self.ext_runtime
-      @ext_runtime || fail(NotInitializedError)
-    end
-
-    def ext_ole_connector
-      AssTests::Assertions.ext_runtime.ole_connector
-    end
-
+    GOOD_OLE_CONNECTORS = [
+      AssLauncher::Enterprise::Ole::IbConnection,
+      AssLauncher::Enterprise::Ole::ThickApplication
+    ]
     def _assert_xml_type(exp, obj, mess = nil)
       act = xml_type_get(obj)
       mess = message(mess) do
@@ -68,17 +55,19 @@ module AssTests
       return obj unless obj.is_a? WIN32OLE
       return obj.__real_obj__ if obj.__ruby__?
       # TODO: make comparsation ruby object from internal Ass string
+      fail InvalidOleConnectorError unless\
+        GOOD_OLE_CONNECTORS.include ole_connector.class
       r = {}
-      r[:as_string] = ext_ole_connector.sTring obj
+      r[:as_string] = ole_connector.sTring obj
       r[:xml_type] = xml_type_get(obj)
-      r[:as_string_internal] = ext_ole_connector.ValueToStringInternal obj
+      r[:as_string_internal] = ole_connector.ValueToStringInternal obj
       r
     end
     private :to_comparable
 
     def xml_type_get(obj)
-      return UNKNOWN_XML_TYPE if ext_ole_connector.xmlTypeOf(obj).nil?
-      ext_ole_connector.xmlTypeOf(obj).typeName
+      return UNKNOWN_XML_TYPE if ole_connector.xmlTypeOf(obj).nil?
+      ole_connector.xmlTypeOf(obj).typeName
     end
     private :xml_type_get
 
