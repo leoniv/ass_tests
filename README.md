@@ -58,7 +58,7 @@ Or install it yourself as:
 ```ruby
 # Describe empty InfoBase
 
-require 'ass_tests'
+require 'ass_tests/minitest'
 AssTests::InfoBases.describe do
   file :empty_ib
 end

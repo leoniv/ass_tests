@@ -24,7 +24,7 @@ module AssTests
     UNKNOWN_XML_TYPE = 'UNKNOWN_XML_TYPE'
 
     def self.init(ext_runtime)
-      fail ArgumentError, 'Expected external runtime' unless\
+      fail ArgumentError, 'Expected external runtime' if\
         ext_runtime.ole_type != :external
       @ext_runtime = ext_runtime
     end
