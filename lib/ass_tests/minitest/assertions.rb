@@ -13,9 +13,33 @@ end
 
 module AssTests
   module Assertions
-    # TODO: It works bad
+    class NotInitializedError < StandardError
+      def message
+        'External runtime does not initialized.'\
+        ' AssTests::Assertions.init(ext_runtime) must be called before'\
+        ' running any assertions'
+      end
+    end
+
+    UNKNOWN_XML_TYPE = 'UNKNOWN_XML_TYPE'
+
+    def self.init(ext_runtime)
+      fail ArgumentError, 'Expected external runtime' unless\
+        ext_runtime.ole_type != :external
+      @ext_runtime = ext_runtime
+    end
+
+    # Returns external runtime
+    def self.ext_runtime
+      @ext_runtime || fail NotInitializedError
+    end
+
+    def ext_ole_connector
+      AssTests::Assertions.ext_runtime.ole_connector
+    end
+
     def _assert_xml_type(exp, obj, mess = nil)
-      act = ole_connector.xmlTypeOf(obj).typeName
+      act = xml_type_get(obj)
       mess = message(mess) do
         "Expected #{exp} xml type but #{act} given"
       end
@@ -45,12 +69,18 @@ module AssTests
       return obj.__real_obj__ if obj.__ruby__?
       # TODO: make comparsation ruby object from internal Ass string
       r = {}
-      r[:as_string] = ole_connector.sTring obj
-      r[:xml_type] = ole_connector.xmlTypeOf(obj).typeName
-      r[:as_string_internal] = ole_connector.ValueToStringInternal obj
+      r[:as_string] = ext_ole_connector.sTring obj
+      r[:xml_type] = xml_type_get(obj)
+      r[:as_string_internal] = ext_ole_connector.ValueToStringInternal obj
       r
     end
     private :to_comparable
+
+    def xml_type_get(obj)
+      return UNKNOWN_XML_TYPE if ext_ole_connector.xmlTypeOf(obj).nil?
+      ext_ole_connector.xmlTypeOf(obj).typeName
+    end
+    private :xml_type_get
 
     def not_comparable?(exp, act)
        is_ruby?(exp) ^ is_ruby?(act)
