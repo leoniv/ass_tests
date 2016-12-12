@@ -56,7 +56,7 @@ module AssTests
       return obj.__real_obj__ if obj.__ruby__?
       # TODO: make comparsation ruby object from internal Ass string
       fail InvalidOleConnectorError unless\
-        GOOD_OLE_CONNECTORS.include ole_connector.class
+        GOOD_OLE_CONNECTORS.include? ole_connector.class
       r = {}
       r[:as_string] = ole_connector.sTring obj
       r[:xml_type] = xml_type_get(obj)
