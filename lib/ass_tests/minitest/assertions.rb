@@ -13,12 +13,6 @@ end
 
 module AssTests
   module Assertions
-    class InvalidOleConnectorError < StandardError
-      def message
-        'Assertions work for external or thick application ole connectors'
-      end
-    end
-
     UNKNOWN_XML_TYPE = 'UNKNOWN_XML_TYPE'
 
     GOOD_OLE_CONNECTORS = [
@@ -55,15 +49,34 @@ module AssTests
       return obj unless obj.is_a? WIN32OLE
       return obj.__real_obj__ if obj.__ruby__?
       # TODO: make comparsation ruby object from internal Ass string
-      fail InvalidOleConnectorError unless\
+
+      return to_comparable_srv_context(obj) if\
         GOOD_OLE_CONNECTORS.include? ole_connector.class
-      r = {}
-      r[:as_string] = ole_connector.sTring obj
-      r[:xml_type] = xml_type_get(obj)
-      r[:as_string_internal] = ole_connector.ValueToStringInternal obj
-      r
+      to_comparable_client_context(obj)
     end
     private :to_comparable
+
+    def to_comparable_client_context(obj)
+      fail 'You should define own method #to_comparable_client_context'\
+        ' and returns #new_comparable Hash'
+    end
+    private :to_comparable_client_context
+
+    def to_comparable_srv_context(obj)
+      new_comparable ole_connector.sTring(obj),
+        xml_type_get(obj),
+        ole_connector.ValueToStringInternal(obj)
+    end
+    private :to_comparable_srv_context
+
+    def new_comparable(as_string, xml_type, as_string_internal)
+      r = {}
+      r[:as_string] = as_string
+      r[:xml_type] = xml_type
+      r[:as_string_internal] = as_string_internal
+      r
+    end
+    private :new_comparable
 
     def xml_type_get(obj)
       return UNKNOWN_XML_TYPE if ole_connector.xmlTypeOf(obj).nil?

@@ -7,12 +7,11 @@ module AssTestsTest
       skip
     end
 
-    it '#to_comparable fail' do
+    it '#to_comparable_client_context fail' do
       skip
       e = proc {
-        skip
-      }.must_raise AssTests::Assertions::InvalidOleConnectorError
-      e.message.must_equal ''
+      }.must_raise RuntimeError
+      e.message.must_match %r{You should define own method #to_comparable_client_context}
     end
   end
 end
