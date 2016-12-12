@@ -77,9 +77,6 @@ module ExampleTest
       run AssTests::InfoBases[:empty_ib]
     end
   end
-
-  # Init assertions with external runtime
-  AssTests::Assertions.init Runtimes::Ext
 end
 
 # After all was prepared loads autorun
