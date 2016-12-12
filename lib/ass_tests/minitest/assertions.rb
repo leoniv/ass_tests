@@ -31,7 +31,7 @@ module AssTests
 
     # Returns external runtime
     def self.ext_runtime
-      @ext_runtime || fail NotInitializedError
+      @ext_runtime || fail(NotInitializedError)
     end
 
     def ext_ole_connector
