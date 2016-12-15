@@ -6,12 +6,6 @@ module AssTests
   require 'ass_tests/fixt'
   require 'ass_tests/externals'
   require 'ass_tests/info_bases'
+  require 'ass_tests/core_patch/win32ole_runtime_error'
 end
 
-class WIN32OLERuntimeError
-  old_message = instance_method(:message)
-  define_method(:message) do
-    old_message.bind(self).call.force_encoding('ASCII-8BIT')\
-      .split('HRESULT')[0].force_encoding('UTF-8').strip
-  end
-end
