@@ -96,10 +96,16 @@ module AssTests
 
     def fail_not_comparable(exp, act)
       fail ArgumentError,
-        "Not comparable types `#{exp.__real_object__.class}'"\
-        " and `#{act.__real_object__.class}'"
+        "Not comparable types `#{not_comparable_class exp}'"\
+        " and `#{not_comparable_class act}'"
     end
     private :fail_not_comparable
+
+    def not_comparable_class(obj)
+      return obj.__real_obj__.class if obj.respond_to? :__real_obj__
+      obj.class
+    end
+    private :not_comparable_class
   end
 end
 
