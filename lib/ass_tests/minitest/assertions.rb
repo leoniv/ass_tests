@@ -90,7 +90,7 @@ module AssTests
         fail_not_comparable(exp, act) if not_comparable?(exp, act)
         exp_ = to_comparable(exp)
         act_ = to_comparable(act)
-        mess = message(mess, Minitest::Assertions::E){diff exp_, act_}
+        mess = message(mess, ::Minitest::Assertions::E){diff exp_, act_}
         assert exp_ == act_, mess
       end
 
