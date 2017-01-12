@@ -20,7 +20,9 @@ It make possible to write tests for 1C:Enterprise on Ruby easy.
 - Not available methods ```eval``` and ```execute``` of 1C "Global context"
 - Unpossible attach to 1C debugger.
 - Now support ```Minitest``` only
-- `AssTests::Assertions` works for external or thick application ole connectors only
+- `AssTests::Minitest::Assertions` works for external or thick application ole
+  connectors from box. For thin application require monkey patch (TODO: write
+  about).
 - Other unknown now :(
 
 ## Features
@@ -87,7 +89,7 @@ require 'ass_tests/minitest/autorun'
 module ExampleTest
   describe 'Spec examle' do
     like_ole_runtime Runtimes::Ext
-    include AssTests::Assertions
+    include AssTests::Minitest::Assertions
 
     it 'Call runtime #metaData' do
       _assert_equal metaData, metaData
@@ -96,7 +98,7 @@ module ExampleTest
 
   class TestExample < Minitest::Test
     like_ole_runtime Runtimes::Ext
-    include AssTests::Assertions
+    include AssTests::Minitest::Assertions
 
     def test_runtime_metaData
       _assert_equal metaData, metaData
@@ -112,13 +114,13 @@ module ExampleTest
 
   class TestInExternalRuntime < Minitest::Test
     like_ole_runtime Runtimes::Ext
-    include AssTests::Assertions
+    include AssTests::Minitest::Assertions
     include SharedTests
   end
 
   class TestInThickAppRuntime < Minitest::Test
     like_ole_runtime Runtimes::ThickApp
-    include AssTests::Assertions
+    include AssTests::Minitest::Assertions
     include SharedTests
   end
 end
