@@ -97,8 +97,7 @@ module AssTests
     end
 
     def self.root
-      fail 'Specify AssTests::Externals.root= path'\
-        unless @root
+      fail 'Specify AssTests::Externals.root= path' unless @root
       @root
     end
 
