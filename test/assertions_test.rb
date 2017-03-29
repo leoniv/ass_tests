@@ -10,14 +10,6 @@ module AssTestsTest
 
   describe AssTests::Minitest::Assertions do
     include AssTests::Minitest::Assertions
-    it '#fail_not_comparable' do
-      ruby_obj = :symbol
-      ole_obj = stub :__real_obj__ => Stubs::WIN32OLE.new
-      e = proc {
-        fail_not_comparable(ruby_obj, ole_obj)
-      }.must_raise ArgumentError
-      e.message.must_match %r{Not comparable.*Symbol.*WIN32OLE}
-    end
 
     it '#to_comparable unless WIN32OLE' do
       to_comparable(:ruby_symbol).must_equal :ruby_symbol

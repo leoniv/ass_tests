@@ -87,7 +87,6 @@ module AssTests
       end
 
       def _assert_equal(exp, act, mess = nil)
-        fail_not_comparable(exp, act) if not_comparable?(exp, act)
         exp_ = to_comparable(exp)
         act_ = to_comparable(act)
         mess = message(mess, ::Minitest::Assertions::E){diff exp_, act_}
@@ -101,28 +100,10 @@ module AssTests
       end
       private :to_comparable
 
-      def not_comparable?(exp, act)
-         ruby?(exp) ^ ruby?(act)
-      end
-      private :not_comparable?
-
       def ruby?(obj)
         !obj.is_a? WIN32OLE or obj.__ruby__?
       end
       private :ruby?
-
-      def fail_not_comparable(exp, act)
-        fail ArgumentError,
-          "Not comparable types `#{not_comparable_class exp}'"\
-          " and `#{not_comparable_class act}'"
-      end
-      private :fail_not_comparable
-
-      def not_comparable_class(obj)
-        return obj.__real_obj__.class if obj.respond_to? :__real_obj__
-        obj.class
-      end
-      private :not_comparable_class
     end
   end
 end
