@@ -40,10 +40,9 @@ AssTests::InfoBases.describe do
     user 'name'
     password 'password'
   # ServerIb
-    agent ENV['ASS_SERVER_AGENT'] # --host 'host:port' --user 'admin' --password 'password'
-    claster ENV['ASS_CLASTER'] # --host 'host:port' --user 'admin' --password 'password'
-    db ENV['EMPTY_DATA_BASE'] # --host 'host:port' --dbms 'MSSQLServer' --db-name 'db_name' --user 'admin' --password 'password' --create-db
-    #db "--host 'host:port' --dbms 'MSSQLServer' --db-name 'db_name' --user 'admin' --password 'password' --create-db"
+    agent  "--host 'ahost:aport' --user 'aadmin' --password 'apassword'" # ENV['ASS_SERVER_AGENT']
+    claster "--host 'chost:cport' --user 'cadmin' --password 'cpassword'" # ENV['ASS_CLASTER']
+    db "--host 'dbhost:dbport' --dbms 'MSSQLServer' --db-name 'db_name' --user 'dbadmin' --password 'dbpassword' --create-db" # ENV['EMPTY_DATA_BASE']
     schjobdn # Запрет заданий см строка соединения
   end
 

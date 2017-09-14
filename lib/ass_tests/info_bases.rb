@@ -130,14 +130,14 @@ module AssTests
             end
 
             class AgentConnection < ServerConnection
-              def self.parse(argv)
-                super(argv).to_server_agent
-              end
-
-              def to_server_agent
-                AssMaintainer::InfoBase::ServerIb::EnterpriseServers::ServerAgent.new(host_port,
-                                                                  user,
-                                                                  password)
+              # @todo refactoring after release ass_maintainer-info_base v0.2.0
+              #  desc.sagent_host host
+              #  desc.sagent_port port
+              def fill_options(desc)
+                desc.sagent_host host_port.split(':')[0]
+                desc.sagent_port host_port.split(':')[1]
+                desc.sagent_usr user
+                desc.sagent_pwd password
               end
             end
 
@@ -230,7 +230,8 @@ module AssTests
           include DescribeOptions
 
           def agent(str)
-            @agent = Helpers::AgentConnection.parse_str(str) unless str.to_s.empty?
+            Helpers::AgentConnection.parse_str(str).fill_options(self) unless\
+              str.to_s.empty?
           end
 
           def claster(str)
@@ -245,12 +246,6 @@ module AssTests
 
           def schjobdn
             cs.schjobdn = 'Y'
-          end
-
-          def ib(&block)
-            ib = super
-            # FIXME: ib.server_agent = @agent || def_agent
-            ib
           end
 
           def init_connection_string
