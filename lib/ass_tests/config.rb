@@ -5,7 +5,7 @@ module AssTests
   ASS_PLATFORM_REQUIRE = ENV['ASS_PLATFORM_REQUIRE'] || '> 0'
   TEST_INFOBASE_DB = ENV['TEST_INFOBASE_DB'] ||\
     '--dbms MSSQLServer --host 127.0.0.1,1433 --user USR1CV8'
-  TEST_INFOBASE_CLASTER = ENV['TEST_INFOBASE_CLASTER'] ||\
+  TEST_INFOBASE_CLUSTER = ENV['TEST_INFOBASE_CLUSTER'] ||\
     '--host 127.0.0.1:1541'
   TEST_INFOBASE_SERVER_AGENT = ENV['TEST_INFOBASE_SERVER_AGENT'] ||\
     '--host 127.0.0.1:1540'
@@ -34,9 +34,9 @@ module AssTests
       @test_infobase_db ||= TEST_INFOBASE_DB
     end
 
-    attr_writer :test_infobase_claster
-    def test_infobase_claster
-      @test_infobase_claster ||= TEST_INFOBASE_CLASTER
+    attr_writer :test_infobase_cluster
+    def test_infobase_cluster
+      @test_infobase_cluster ||= TEST_INFOBASE_CLUSTER
     end
 
     attr_writer :test_infobase_server_agent

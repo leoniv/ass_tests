@@ -141,7 +141,7 @@ module AssTests
               end
             end
 
-            class ClasterConnection < ServerConnection
+            class ClusterConnection < ServerConnection
               def fill_cs(cs)
                 cs.srvr = host_port.to_s
                 cs.susr = user
@@ -234,9 +234,9 @@ module AssTests
               str.to_s.empty?
           end
 
-          def claster(str)
-            @claster = Helpers::ClasterConnection.parse_str(str)
-            @claster.fill_cs(cs)
+          def cluster(str)
+            @cluster = Helpers::ClusterConnection.parse_str(str)
+            @cluster.fill_cs(cs)
           end
 
           def db(str)
@@ -269,15 +269,15 @@ module AssTests
           end
           private :def_agent
 
-          def def_claster
-            @claster ||= Helpers::ClasterConnection\
-              .parse_str(AssTests.config.test_infobase_claster)
+          def def_cluster
+            @cluster ||= Helpers::ClusterConnection\
+              .parse_str(AssTests.config.test_infobase_cluster)
           end
-          private :def_claster
+          private :def_cluster
 
           def init_connections
             def_db.fill_cs(cs)
-            def_claster.fill_cs(cs)
+            def_cluster.fill_cs(cs)
           end
           private :init_connections
         end
