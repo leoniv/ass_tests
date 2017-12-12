@@ -249,6 +249,7 @@ module AssTests
 
       def _assert_match(matcher, obj, mess = nil)
         return assert_match matcher, obj, mess unless obj.is_a? WIN32OLE
+        return assert_match matcher, obj, mess unless respond_to? :ole_connector
         ole_str = ole_connector.sTring(obj)
         assert_match matcher, ole_str, mess
       end
