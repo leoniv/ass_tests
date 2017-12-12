@@ -75,16 +75,19 @@ module AssTests
         end
         assert exp == act, mess
       end
+      ::Minitest::Expectations.infect_an_assertion :_assert_xml_type, :must_be_xmltype
 
       def _assert_ref_empty(obj, mess = nil)
         mess = message(mess) {"Ref must be empty"}
         assert obj.ref.IsEmpty, mess
       end
+      ::Minitest::Expectations.infect_an_assertion :_assert_ref_empty, :must_be_emptyref
 
       def _refute_ref_empty(obj, mess = nil)
         mess = message(mess) {"Ref must not be empty"}
         refute obj.ref.IsEmpty, mess
       end
+      ::Minitest::Expectations.infect_an_assertion :_refute_ref_empty, :wont_be_emptyref
 
       def _assert_equal(exp, act, mess = nil)
         exp_ = to_comparable(exp)
@@ -92,10 +95,13 @@ module AssTests
         mess = message(mess, ::Minitest::Assertions::E){diff exp_, act_}
         assert exp_ == act_, mess
       end
+      ## must_equal patch
+      ::Minitest::Expectations.infect_an_assertion :_assert_equal, :must_equal
 
       def to_comparable(obj)
         return obj unless obj.is_a? WIN32OLE
         return obj.__real_obj__ if obj.__ruby__?
+        return obj unless respond_to? :ole_connector
         Comparable.new(obj, ole_connector).make
       end
       private :to_comparable
@@ -247,9 +253,6 @@ module AssTests
         assert_match matcher, ole_str, mess
       end
       ::Minitest::Expectations.infect_an_assertion :_assert_match, :must_match
-
-      ## must_equal patch
-      ::Minitest::Expectations.infect_an_assertion :_assert_equal, :must_equal
     end
   end
 end
