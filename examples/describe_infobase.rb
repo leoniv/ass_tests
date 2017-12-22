@@ -61,6 +61,7 @@ module ExampleTest
     end
 
     it 'empty_server_ib exists' do
+      skip 'FIXME'
       proc {
         AssTests::InfoBases[:empty_server_ib].must_be_instance_of\
           AssTests::InfoBases::InfoBase
