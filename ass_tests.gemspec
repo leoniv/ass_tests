@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "ass_ole"
+  spec.add_dependency "ass_ole", "~> 0.3"
   spec.add_dependency "ass_maintainer-info_base"
   spec.add_dependency "minitest", "~> 5.10"
   spec.add_dependency "minitest-hooks"

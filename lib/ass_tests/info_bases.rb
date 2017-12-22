@@ -16,7 +16,7 @@ module AssTests
 
         module DescribeOptions
           def options
-            @options ||= InfoBase.ALL_OPTIONS.clone
+            @options ||= InfoBases::InfoBase::ALL_OPTIONS.clone
           end
 
           def method_missing(method, *args)
@@ -108,8 +108,16 @@ module AssTests
             end
 
             class ServerConnection
-              include AssMaintainer::InfoBase::ServerIb::EnterpriseServers::ServerConnection
               extend Parser
+
+              attr_reader :host_port, :user, :password
+              def initialize(host_port, user, password)
+                fail ArgumentError, 'Host name require' if host_port.to_s.empty?
+                @host_port = host_port.to_s
+                @user = user
+                @password = password
+              end
+
               def self.options
                 opts.on('-H', '--host HOST:PORT') do |v|
                   presult[:host_port] = v

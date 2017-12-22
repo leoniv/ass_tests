@@ -14,9 +14,7 @@ module AssTests
         end
       end
 
-      def self.ALL_OPTIONS()
-        AssMaintainer::InfoBase::OPTIONS.merge OPTIONS
-      end
+      ALL_OPTIONS = AssMaintainer::InfoBase::OPTIONS.merge OPTIONS
 
       # @param name [String]
       # @param connection_string [String AssLauncher::Support::ConnectionString]
@@ -29,8 +27,16 @@ module AssTests
       # @note +options+ may includes other options defined for
       #  +AssMaintainer::InfoBase+
       def initialize(name, connection_string, read_only = true, **options)
-        super name, connection_string, read_only, **OPTIONS.merge(options)
+        super name, connection_string, read_only
+        @options = validate_options(options)
       end
+
+      def validate_options(options)
+        _opts = options.keys - ALL_OPTIONS.keys
+        fail ArgumentError, "Unknown options: #{_opts}" unless _opts.empty?
+        ALL_OPTIONS.merge(options)
+      end
+      private :validate_options
 
       attr_reader :template_loaded
       alias_method :template_loaded?, :template_loaded
