@@ -55,7 +55,7 @@ module ExampleTest
   describe 'smoky test' do
     it 'empty_ib exists' do
       AssTests::InfoBases[:empty_ib].must_be_instance_of\
-        AssTests::InfoBases::InfoBase
+        AssMaintainer::InfoBases::TestInfoBase
       AssTests::InfoBases[:empty_ib].is?(:file).must_equal true
       AssTests::InfoBases[:empty_ib].read_only?.must_equal false
     end
@@ -64,7 +64,7 @@ module ExampleTest
       skip 'FIXME'
       proc {
         AssTests::InfoBases[:empty_server_ib].must_be_instance_of\
-          AssTests::InfoBases::InfoBase
+          AssMaintainer::InfoBases::TestInfoBase
         AssTests::InfoBases[:empty_server_ib].is?(:server).must_equal true
         AssTests::InfoBases[:empty_server_ib].read_only?.must_equal false
       }.must_raise NotImplementedError
@@ -72,7 +72,7 @@ module ExampleTest
 
     it 'acc30 exists' do
       AssTests::InfoBases[:acc30].must_be_instance_of\
-        AssTests::InfoBases::InfoBase
+        AssMaintainer::InfoBases::TestInfoBase
       AssTests::InfoBases[:acc30].is?(:file).must_equal true
       AssTests::InfoBases[:acc30].read_only?.must_equal true
       AssTests::InfoBases[:acc30].platform_require.must_equal '>= 8.3'

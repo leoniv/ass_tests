@@ -1,12 +1,13 @@
 module AssTests
   module InfoBases
-    require 'ass_tests/info_bases/info_base'
+    require 'ass_maintainer/info_bases/test_info_base'
     module DSL
       module Describer
         class AbstractDescriber
           def ib(&block)
             instance_eval(&block) if block_given?
-            InfoBase.new(ib_name, connection_string, external?, options)
+            AssMaintainer::InfoBases::TestInfoBase
+              .new(ib_name, connection_string, external?, options)
           end
 
           def external?
@@ -16,7 +17,8 @@ module AssTests
 
         module DescribeOptions
           def options
-            @options ||= InfoBases::InfoBase::ALL_OPTIONS.clone
+            @options ||= AssMaintainer::InfoBases::TestInfoBase::ALL_OPTIONS
+              .clone
           end
 
           def method_missing(method, *args)
